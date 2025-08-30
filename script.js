@@ -1,42 +1,48 @@
 const html5QrCode = new Html5Qrcode("reader");
 
 function onScanSuccess(decodedText) {
-  console.log("Folio leído:", decodedText);
+  const folioEscaneado = decodedText.trim();
+  console.log("Folio leído:", folioEscaneado);
 
   fetch("constancias.json")
     .then(response => response.json())
     .then(data => {
-      const resultDiv = document.getElementById("result");
-      const constancia = data.find(item => item.folio === decodedText);
+      const resultado = document.getElementById("result");
+      const constancia = data.find(item => item.Folio.trim() === folioEscaneado);
 
       if (constancia) {
-        resultDiv.className = "valido";
-        resultDiv.innerHTML = `
+        resultado.className = "valido";
+        resultado.innerHTML = `
           <strong>Constancia Verificada ✅</strong><br><br>
           <strong>Folio:</strong> ${constancia.Folio}<br>
           <strong>Nombre:</strong> ${constancia.Nombre}<br>
           <strong>Curso:</strong> ${constancia.Curso}<br>
           <strong>Fecha:</strong> ${constancia.Fecha}<br><br>
-          Nancy Jazmín Martínez Morales <br>
+          Nancy Jazzmín Martínez Morales<br>
           <em>Directora General</em>
         `;
       } else {
-        resultDiv.className = "invalido";
-        resultDiv.innerHTML = "❌ Constancia No Encontrada";
+        resultado.className = "invalido";
+        resultado.innerHTML = "❌ Constancia No Encontrada";
       }
     })
     .catch(err => console.error("Error cargando JSON:", err));
 }
 
-// Inicia la cámara
-Html5Qrcode.getCameras().then(devices => {
-  if (devices && devices.length) {
-    html5QrCode.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 250 },
-      onScanSuccess
-    );
-  }
-}).catch(err => console.error("Error iniciando cámara:", err));
+// Función para iniciar cámara
+function iniciarCamara() {
+  Html5Qrcode.getCameras().then(devices => {
+    if (devices && devices.length) {
+      html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        onScanSuccess
+      ).catch(err => console.error("Error iniciando cámara:", err));
+    } else {
+      console.error("No se detectaron cámaras");
+    }
+  }).catch(err => console.error("Error obteniendo cámaras:", err));
+}
 
-
+// Arranca al cargar la página
+window.addEventListener("load", iniciarCamara);
