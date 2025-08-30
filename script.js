@@ -8,17 +8,14 @@ async function buscarFolio(folio) {
     const response = await fetch("./constancias.json");
     const constancias = await response.json();
 
-    // Limpiar espacios y comparar
     const folioLimpio = folio.trim();
     const registro = constancias.find(c => c.folio.trim() === folioLimpio);
 
     if (registro) {
-      // Fondo verde solo
       resultadoDiv.style.backgroundColor = "#d4edda";
       resultadoDiv.style.color = "#155724";
       iconoDiv.textContent = "✅";
     } else {
-      // Fondo rojo si es inválido
       resultadoDiv.style.backgroundColor = "#f8d7da";
       resultadoDiv.style.color = "#721c24";
       iconoDiv.textContent = "❌";
@@ -30,7 +27,6 @@ async function buscarFolio(folio) {
     console.error(error);
   }
 
-  // Animación del icono
   iconoDiv.classList.remove("bounce");
   void iconoDiv.offsetWidth;
   iconoDiv.classList.add("bounce");
