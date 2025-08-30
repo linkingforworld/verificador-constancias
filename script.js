@@ -17,7 +17,7 @@ function onScanSuccess(decodedText) {
           <strong>Nombre:</strong> ${constancia.nombre}<br>
           <strong>Curso:</strong> ${constancia.curso}<br>
           <strong>Fecha:</strong> ${constancia.fecha}<br><br>
-          Nancy Jazzmín Martínez Morales <br>
+          Nancy Jazmín Martínez Morales <br>
           <em>Directora General</em>
         `;
       } else {
@@ -38,3 +38,4 @@ Html5Qrcode.getCameras().then(devices => {
     );
   }
 }).catch(err => console.error("Error iniciando cámara:", err));
+
