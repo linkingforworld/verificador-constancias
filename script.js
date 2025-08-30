@@ -13,22 +13,24 @@ async function buscarFolio(folio) {
 
     if (registro) {
       resultadoDiv.style.backgroundColor = "#d4edda"; // verde
-      iconoDiv.textContent = "✅";
+      iconoDiv.textContent = "✅"; // válido
     } else {
       resultadoDiv.style.backgroundColor = "#f8d7da"; // rojo
-      iconoDiv.textContent = "❌";
+      iconoDiv.textContent = "❌"; // inválido
     }
   } catch (error) {
     console.error("Error al cargar los datos:", error);
-    // Solo cambia el fondo a rojo si hay error, sin ícono ⚠️
+    // Solo fondo rojo si hay error, sin ícono ⚠️
     resultadoDiv.style.backgroundColor = "#f8d7da";
     iconoDiv.textContent = "❌";
   }
 
-  // Animación del icono
-  iconoDiv.classList.remove("bounce");
-  void iconoDiv.offsetWidth;
-  iconoDiv.classList.add("bounce");
+  // Animación del icono (solo si hay contenido)
+  if(iconoDiv.textContent !== "") {
+    iconoDiv.classList.remove("bounce");
+    void iconoDiv.offsetWidth;
+    iconoDiv.classList.add("bounce");
+  }
 }
 
 function iniciarQR() {
