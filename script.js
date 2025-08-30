@@ -1,33 +1,34 @@
-// Inicializar escáner
 const html5QrCode = new Html5Qrcode("reader");
 
-// Función al leer QR
 function onScanSuccess(decodedText) {
   console.log("Folio leído:", decodedText);
 
-  // Cargar archivo JSON
   fetch("constancias.json")
     .then(response => response.json())
     .then(data => {
+      const resultDiv = document.getElementById("result");
       const constancia = data.find(item => item.folio === decodedText);
 
-      const resultDiv = document.getElementById("result");
       if (constancia) {
+        resultDiv.className = "valido";
         resultDiv.innerHTML = `
-          <h2 style="color:green;">✅ Constancia Válida</h2>
-          <p><strong>Folio:</strong> ${constancia.folio}</p>
-          <p><strong>Nombre:</strong> ${constancia.nombre}</p>
-          <p><strong>Curso:</strong> ${constancia.curso}</p>
-          <p><strong>Fecha de expedición:</strong> ${constancia.fecha}</p>
+          <strong>Constancia Verificada ✅</strong><br><br>
+          <strong>Folio:</strong> ${constancia.folio}<br>
+          <strong>Nombre:</strong> ${constancia.nombre}<br>
+          <strong>Curso:</strong> ${constancia.curso}<br>
+          <strong>Fecha:</strong> ${constancia.fecha}<br><br>
+          Nancy Jazzmín Martínez Morales <br>
+          <em>Directora General</em>
         `;
       } else {
-        resultDiv.innerHTML = `<h2 style="color:red;">❌ Constancia no encontrada</h2>`;
+        resultDiv.className = "invalido";
+        resultDiv.innerHTML = "❌ Constancia No Encontrada";
       }
     })
-    .catch(err => console.error("Error al cargar JSON:", err));
+    .catch(err => console.error("Error cargando JSON:", err));
 }
 
-// Arrancar cámara
+// Inicia la cámara
 Html5Qrcode.getCameras().then(devices => {
   if (devices && devices.length) {
     html5QrCode.start(
@@ -36,4 +37,4 @@ Html5Qrcode.getCameras().then(devices => {
       onScanSuccess
     );
   }
-}).catch(err => console.error("Error al iniciar cámara:", err));
+}).catch(err => console.error("Error iniciando cámara:", err));
