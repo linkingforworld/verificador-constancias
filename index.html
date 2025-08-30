@@ -4,12 +4,53 @@
   <meta charset="UTF-8">
   <title>Verificación de Constancias</title>
   <script src="https://unpkg.com/html5-qrcode"></script>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #000;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      font-style: italic;
+      font-size: 28px;
+    }
+    h2 {
+      font-weight: bold;
+      font-family: "Trebuchet MS", sans-serif;
+      font-size: 20px;
+      margin-top: -10px;
+    }
+    #reader {
+      width: 300px;
+      margin: 20px auto;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .valido {
+      background: #28a745;
+      color: #fff;
+    }
+    .invalido {
+      background: #721c24;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
-  <h1>Verificador de Constancias</h1>
-  <div id="reader" style="width:300px; margin:auto;"></div>
+  <h1>LInking for World</h1>
+  <h2>Networking</h2>
+
+  <div id="reader"></div>
   <div id="result"></div>
+
   <script src="script.js"></script>
 </body>
 </html>
