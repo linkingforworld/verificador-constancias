@@ -12,21 +12,20 @@ async function buscarFolio(folio) {
     const registro = constancias.find(c => c.folio.trim() === folioLimpio);
 
     if (registro) {
-      resultadoDiv.style.backgroundColor = "#d4edda";
-      resultadoDiv.style.color = "#155724";
+      resultadoDiv.style.backgroundColor = "#d4edda"; // verde
       iconoDiv.textContent = "✅";
     } else {
-      resultadoDiv.style.backgroundColor = "#f8d7da";
-      resultadoDiv.style.color = "#721c24";
+      resultadoDiv.style.backgroundColor = "#f8d7da"; // rojo
       iconoDiv.textContent = "❌";
     }
   } catch (error) {
-    resultadoDiv.style.backgroundColor = "#fff3cd";
-    resultadoDiv.style.color = "#856404";
-    iconoDiv.textContent = "⚠️";
-    console.error(error);
+    console.error("Error al cargar los datos:", error);
+    // Solo cambia el fondo a rojo si hay error, sin ícono ⚠️
+    resultadoDiv.style.backgroundColor = "#f8d7da";
+    iconoDiv.textContent = "❌";
   }
 
+  // Animación del icono
   iconoDiv.classList.remove("bounce");
   void iconoDiv.offsetWidth;
   iconoDiv.classList.add("bounce");
