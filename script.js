@@ -1,40 +1,32 @@
-const html5QrCode = new Html5Qrcode("reader");
+function verificarConstancia(folio) {
+    folio = folio.trim(); // quita espacios
+    console.log("Folio escaneado:", folio);
 
-function onScanSuccess(decodedText) {
-  console.log("Folio leído:", decodedText);
+    fetch("constancias.json")
+        .then(response => response.json())
+        .then(data => {
+            console.log("Constancias cargadas:", data);
 
-  fetch("constancias.json")
-    .then(response => response.json())
-    .then(data => {
-      const resultDiv = document.getElementById("result");
-      const constancia = data.find(item => item.folio === decodedText);
+            const constancia = data.find(c => c.folio.trim() === folio);
+            const resultado = document.getElementById("resultado");
 
-      if (constancia) {
-        resultDiv.className = "valido";
-        resultDiv.innerHTML = `
-          <strong>Constancia Verificada ✅</strong><br><br>
-          <strong>Folio:</strong> ${constancia.folio}<br>
-          <strong>Nombre:</strong> ${constancia.nombre}<br>
-          <strong>Curso:</strong> ${constancia.curso}<br>
-          <strong>Fecha:</strong> ${constancia.fecha}<br><br>
-          Nancy Jazzmín Martínez Morales <br>
-          <em>Directora General</em>
-        `;
-      } else {
-        resultDiv.className = "invalido";
-        resultDiv.innerHTML = "❌ Constancia No Encontrada";
-      }
-    })
-    .catch(err => console.error("Error cargando JSON:", err));
+            if (constancia) {
+                resultado.style.background = "green";
+                resultado.innerHTML = `
+                    <p>✅ Constancia verificada</p>
+                    <p><strong>Folio:</strong> ${constancia.folio}</p>
+                    <p><strong>Nombre:</strong> ${constancia.nombre}</p>
+                    <p><strong>Curso:</strong> ${constancia.curso}</p>
+                    <p><strong>Fecha:</strong> ${constancia.fecha}</p>
+                    <br>
+                    <p>Nancy Jazzmín Martínez Morales<br><em>Directora General</em></p>
+                `;
+            } else {
+                resultado.style.background = "red";
+                resultado.innerHTML = "<p>❌ Constancia no encontrada</p>";
+            }
+        })
+        .catch(error => {
+            console.error("Error cargando JSON:", error);
+        });
 }
-
-// Inicia la cámara
-Html5Qrcode.getCameras().then(devices => {
-  if (devices && devices.length) {
-    html5QrCode.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 250 },
-      onScanSuccess
-    );
-  }
-}).catch(err => console.error("Error iniciando cámara:", err));
