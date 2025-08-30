@@ -8,6 +8,8 @@ function onScanSuccess(decodedText) {
     .then(response => response.json())
     .then(data => {
       const resultado = document.getElementById("result");
+
+      // Buscar usando la clave correcta "Folio"
       const constancia = data.find(item => item.Folio.trim() === folioEscaneado);
 
       if (constancia) {
@@ -29,20 +31,13 @@ function onScanSuccess(decodedText) {
     .catch(err => console.error("Error cargando JSON:", err));
 }
 
-// Función para iniciar cámara
-function iniciarCamara() {
-  Html5Qrcode.getCameras().then(devices => {
-    if (devices && devices.length) {
-      html5QrCode.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        onScanSuccess
-      ).catch(err => console.error("Error iniciando cámara:", err));
-    } else {
-      console.error("No se detectaron cámaras");
-    }
-  }).catch(err => console.error("Error obteniendo cámaras:", err));
-}
-
-// Arranca al cargar la página
-window.addEventListener("load", iniciarCamara);
+// Inicia cámara
+Html5Qrcode.getCameras().then(devices => {
+  if (devices && devices.length) {
+    html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      onScanSuccess
+    );
+  }
+}).catch(err => console.error("Error iniciando cámara:", err));
