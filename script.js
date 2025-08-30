@@ -1,32 +1,43 @@
-function verificarConstancia(folio) {
-    folio = folio.trim(); // quita espacios
-    console.log("Folio escaneado:", folio);
+const html5QrCode = new Html5Qrcode("reader");
 
-    fetch("constancias.json")
-        .then(response => response.json())
-        .then(data => {
-            console.log("Constancias cargadas:", data);
+function onScanSuccess(decodedText) {
+  const folioEscaneado = decodedText.trim();
+  console.log("Folio leído:", folioEscaneado);
 
-            const constancia = data.find(c => c.folio.trim() === folio);
-            const resultado = document.getElementById("resultado");
+  fetch("constancias.json")
+    .then(response => response.json())
+    .then(data => {
+      const resultado = document.getElementById("result");
 
-            if (constancia) {
-                resultado.style.background = "green";
-                resultado.innerHTML = `
-                    <p>✅ Constancia verificada</p>
-                    <p><strong>Folio:</strong> ${constancia.folio}</p>
-                    <p><strong>Nombre:</strong> ${constancia.nombre}</p>
-                    <p><strong>Curso:</strong> ${constancia.curso}</p>
-                    <p><strong>Fecha:</strong> ${constancia.fecha}</p>
-                    <br>
-                    <p>Nancy Jazzmín Martínez Morales<br><em>Directora General</em></p>
-                `;
-            } else {
-                resultado.style.background = "red";
-                resultado.innerHTML = "<p>❌ Constancia no encontrada</p>";
-            }
-        })
-        .catch(error => {
-            console.error("Error cargando JSON:", error);
-        });
+      // Buscar usando la clave correcta "Folio"
+      const constancia = data.find(item => item.Folio.trim() === folioEscaneado);
+
+      if (constancia) {
+        resultado.className = "valido";
+        resultado.innerHTML = `
+          <strong>Constancia Verificada ✅</strong><br><br>
+          <strong>Folio:</strong> ${constancia.Folio}<br>
+          <strong>Nombre:</strong> ${constancia.Nombre}<br>
+          <strong>Curso:</strong> ${constancia.Curso}<br>
+          <strong>Fecha:</strong> ${constancia.Fecha}<br><br>
+          Nancy Jazzmín Martínez Morales<br>
+          <em>Directora General</em>
+        `;
+      } else {
+        resultado.className = "invalido";
+        resultado.innerHTML = "❌ Constancia No Encontrada";
+      }
+    })
+    .catch(err => console.error("Error cargando JSON:", err));
 }
+
+// Inicia cámara
+Html5Qrcode.getCameras().then(devices => {
+  if (devices && devices.length) {
+    html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      onScanSuccess
+    );
+  }
+}).catch(err => console.error("Error iniciando cámara:", err));
