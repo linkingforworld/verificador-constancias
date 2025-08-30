@@ -1,39 +1,61 @@
-let html5QrCode;
-
-async function buscarFolio(folio) {
-  const resultadoDiv = document.getElementById("resultado");
-
+// script.js
+async function loadData() {
   try {
-    const response = await fetch("./constancias.json");
-    const constancias = await response.json();
-
-    const folioLimpio = folio.trim();
-    const registro = constancias.find(c => c.folio.trim() === folioLimpio);
-
-    if (registro) {
-      resultadoDiv.style.backgroundColor = "#d4edda"; // verde
-    } else {
-      resultadoDiv.style.backgroundColor = "#f8d7da"; // rojo
-    }
+    const response = await fetch("data.json");
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error("Error al cargar los datos:", error);
-    resultadoDiv.style.backgroundColor = "#f8d7da"; // rojo si hay error
+    console.error("Error cargando el archivo JSON:", error);
+    return [];
   }
 }
 
-function iniciarQR() {
-  html5QrCode = new Html5Qrcode("reader");
+function initScanner(data) {
+  const html5QrCode = new Html5Qrcode("reader");
+
+  function onScanSuccess(decodedText) {
+    const folioEscaneado = decodedText.trim(); // quita espacios invisibles
+    console.log("Folio leído:", folioEscaneado);
+
+    // buscar el folio en el JSON
+    const registro = data.find(item => item.folio.trim() === folioEscaneado);
+
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = "";
+
+    if (registro) {
+      // ✅ Folio encontrado
+      resultDiv.innerHTML = `
+        <div class="success">
+          <h2>✔ Folio válido</h2>
+          <p><b>Folio:</b> ${registro.folio}</p>
+          <p><b>Curso:</b> ${registro.curso}</p>
+          <p><b>Usuario:</b> ${registro.usuario}</p>
+          <p><b>Fecha de expedición:</b> ${registro.fecha}</p>
+        </div>
+      `;
+    } else {
+      // ❌ Folio no encontrado
+      resultDiv.innerHTML = `
+        <div class="error">
+          <h2>✘ Folio inválido</h2>
+          <p>No se encontró el registro en la base de datos.</p>
+        </div>
+      `;
+    }
+  }
+
+  function onScanFailure(error) {
+    // no pasa nada si falla, solo no detectó código
+  }
 
   html5QrCode.start(
     { facingMode: "environment" },
     { fps: 10, qrbox: 250 },
-    (decodedText) => {
-      buscarFolio(decodedText);
-    },
-    (errorMessage) => {}
-  ).catch(err => {
-    console.error("Error al iniciar cámara:", err);
-  });
+    onScanSuccess,
+    onScanFailure
+  );
 }
 
-window.onload = iniciarQR;
+// carga el JSON y arranca el escáner
+loadData().then(data => initScanner(data));
