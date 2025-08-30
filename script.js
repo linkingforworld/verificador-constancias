@@ -6,11 +6,16 @@ async function buscarFolio(folio) {
   const mensajeDiv = document.getElementById("mensaje");
 
   try {
-    const response = await fetch("constancias.json");
+    const response = await fetch("./constancias.json");
     const constancias = await response.json();
+    console.log("Constancias cargadas:", constancias);
 
-    // Limpiar espacios del folio escaneado
-    const registro = constancias.find(c => c.folio === folio.trim());
+    // Limpiar espacios y caracteres invisibles del folio escaneado
+    const folioLimpio = folio.trim();
+
+    // Buscar registro
+    const registro = constancias.find(c => c.folio.trim() === folioLimpio);
+    console.log("Buscando folio:", folioLimpio, "Encontrado:", registro);
 
     if (registro) {
       resultadoDiv.style.backgroundColor = "#d4edda";
@@ -36,8 +41,8 @@ async function buscarFolio(folio) {
   }
 
   // Animación: mostrar resultado
-  resultadoDiv.classList.remove("visible"); 
-  void resultadoDiv.offsetWidth; 
+  resultadoDiv.classList.remove("visible");
+  void resultadoDiv.offsetWidth;
   resultadoDiv.classList.add("visible");
 
   // Animación “rebote” del icono
@@ -53,7 +58,7 @@ function iniciarQR() {
     { facingMode: "environment" },
     { fps: 10, qrbox: 250 },
     (decodedText, decodedResult) => {
-      console.log("QR leído:", decodedText); // para depuración
+      console.log("QR leído:", decodedText); // depuración
       buscarFolio(decodedText);
     },
     (errorMessage) => {}
