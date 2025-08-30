@@ -12,14 +12,14 @@ function onScanSuccess(decodedText) {
       // Buscar usando la clave correcta "Folio"
       const constancia = data.find(item => item.Folio.trim() === folioEscaneado);
 
-      if (constancia) {
+      if (constancias) {
         resultado.className = "valido";
         resultado.innerHTML = `
           <strong>Constancia Verificada ✅</strong><br><br>
-          <strong>Folio:</strong> ${constancia.Folio}<br>
-          <strong>Nombre:</strong> ${constancia.Nombre}<br>
-          <strong>Curso:</strong> ${constancia.Curso}<br>
-          <strong>Fecha:</strong> ${constancia.Fecha}<br><br>
+          <strong>Folio:</strong> ${constancias.Folio}<br>
+          <strong>Nombre:</strong> ${constancias.Nombre}<br>
+          <strong>Curso:</strong> ${constancias.Curso}<br>
+          <strong>Fecha:</strong> ${constancias.Fecha}<br><br>
           Nancy Jazzmín Martínez Morales<br>
           <em>Directora General</em>
         `;
@@ -41,3 +41,4 @@ Html5Qrcode.getCameras().then(devices => {
     );
   }
 }).catch(err => console.error("Error iniciando cámara:", err));
+
