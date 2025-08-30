@@ -13,10 +13,10 @@ function onScanSuccess(decodedText) {
         resultDiv.className = "valido";
         resultDiv.innerHTML = `
           <strong>Constancia Verificada ✅</strong><br><br>
-          <strong>Folio:</strong> ${constancia.folio}<br>
-          <strong>Nombre:</strong> ${constancia.nombre}<br>
-          <strong>Curso:</strong> ${constancia.curso}<br>
-          <strong>Fecha:</strong> ${constancia.fecha}<br><br>
+          <strong>Folio:</strong> ${constancia.Folio}<br>
+          <strong>Nombre:</strong> ${constancia.Nombre}<br>
+          <strong>Curso:</strong> ${constancia.Curso}<br>
+          <strong>Fecha:</strong> ${constancia.Fecha}<br><br>
           Nancy Jazmín Martínez Morales <br>
           <em>Directora General</em>
         `;
@@ -38,4 +38,5 @@ Html5Qrcode.getCameras().then(devices => {
     );
   }
 }).catch(err => console.error("Error iniciando cámara:", err));
+
 
